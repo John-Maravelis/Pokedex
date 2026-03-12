@@ -56,11 +56,26 @@ class PokemonViewModel : ViewModel() {
                     val primaryType = details.types.firstOrNull()?.type?.name ?: "normal"
                     _selectedType.value = primaryType
 
+                    var fetchedHp = 0
+                    var fetchedAttack = 0
+                    var fetchedDefense = 0
+
+                    details.stats.forEach { statEntry ->
+                        when (statEntry.stat.name) {
+                            "hp" -> fetchedHp = statEntry.base_stat
+                            "attack" -> fetchedAttack = statEntry.base_stat
+                            "defense" -> fetchedDefense = statEntry.base_stat
+                        }
+                    }
+
                     val isolatedPokemon = Pokemon(
                         id = details.id,
                         name = details.name,
                         type = primaryType,
-                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${details.id}.png"
+                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${details.id}.png",
+                        hp = fetchedHp,
+                        attack = fetchedAttack,
+                        defense = fetchedDefense
                     )
 
                     _filteredPokemonList.value = listOf(isolatedPokemon)

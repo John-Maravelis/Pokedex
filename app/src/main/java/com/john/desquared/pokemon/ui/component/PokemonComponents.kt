@@ -260,12 +260,15 @@ fun PokemonNotFoundView(modifier: Modifier = Modifier) {
 fun getTypeColor(type: String): Color {
     return when (type.lowercase()) {
         "fire" -> Color(0xFFFF4B4B)
-        "water" -> Color(0xFF4A90E2)
-        "grass" -> Color(0xFF4CAF50)
-        "electric" -> Color(0xFFFFC107)
-        "psychic" -> Color(0xFF9C27B0)
-        "normal" -> Color(0xFF9E9E9E)
-        "fighting" -> Color(0xFFFF9800)
-        else -> Color(0xFF607D8B)
+        "water" -> Color(0xFF6890F0)
+        "grass" -> Color(0xFF78C850)
+        "electric" -> Color(0xFFF8D030)
+        "dragon" -> Color(0xFF7038F8)
+        "psychic" -> Color(0xFFF85888)
+        "ghost" -> Color(0xFF705898)
+        "dark" -> Color(0xFF705848)
+        "steel" -> Color(0xFFB8B8D0)
+        "fairy" -> Color(0xFFEE99AC)
+        else -> Color(0xFFA8A878)
     }
 }

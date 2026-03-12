@@ -46,8 +46,10 @@ class MainActivity : ComponentActivity() {
                 val currentType by viewModel.selectedType.collectAsState()
                 val isLoading by viewModel.isLoading.collectAsState()
                 val searchText by viewModel.searchText.collectAsState()
-                val pokemonTypes = listOf("fire", "water", "grass", "electric", "psychic", "normal", "fighting")
-
+                val pokemonTypes = listOf(
+                    "fire", "water", "grass", "electric", "dragon",
+                    "psychic", "ghost", "dark", "steel", "fairy"
+                )
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(
                         modifier = Modifier

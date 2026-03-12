@@ -1,5 +1,6 @@
 package com.john.desquared.pokemon.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.john.desquared.pokemon.data.RetrofitClient
@@ -22,7 +23,6 @@ class PokemonViewModel : ViewModel() {
     private var currentOffset = 0
     private var searchJob: Job? = null
     val filteredPokemonList: StateFlow<List<Pokemon>> = _filteredPokemonList
-    val pokemonList: StateFlow<List<Pokemon>> = _pokemonList
     val selectedType: StateFlow<String> = _selectedType
     val isLoading: StateFlow<Boolean> = _isLoading
     val searchText: StateFlow<String> = _searchText
@@ -54,11 +54,21 @@ class PokemonViewModel : ViewModel() {
                 try {
                     val details = RetrofitClient.apiService.getPokemonDetails(newText.lowercase())
                     val primaryType = details.types.firstOrNull()?.type?.name ?: "normal"
-                    fetchPokemon(primaryType)
+                    _selectedType.value = primaryType
+
+                    val isolatedPokemon = Pokemon(
+                        id = details.id,
+                        name = details.name,
+                        type = primaryType,
+                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${details.id}.png"
+                    )
+
+                    _filteredPokemonList.value = listOf(isolatedPokemon)
 
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
+                    Log.e("PokemonViewModel", "Global search failed", e)
                     _filteredPokemonList.value = emptyList()
                     _showNotFoundError.value = true
                 }
@@ -98,6 +108,11 @@ class PokemonViewModel : ViewModel() {
             val nextBatch = repository.getPokemonTeam(_selectedType.value, currentOffset)
             if (nextBatch.isNotEmpty()) {
                 _pokemonList.value += nextBatch
+
+                if (_searchText.value.isEmpty()) {
+                    _filteredPokemonList.value += nextBatch
+                }
+
                 currentOffset += 10
             }
             isFetchingMore = false
